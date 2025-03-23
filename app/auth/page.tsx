@@ -1,48 +1,38 @@
-import Link from 'next/link'
+'use client'
 
-type Article = {
-  id: number
-  title: string
-  description: string | null
-  image_url: string | null
-  url: string
-}
+import { useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
 
-export default async function HomePage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : ''}/api/articles`)
-  const { articles }: { articles: Article[] } = await res.json()
+export default function AuthPage() {
+  const [email, setEmail] = useState('')
+
+  const signInWithEmail = async () => {
+    const { error } = await supabase.auth.signInWithOtp({ email })
+    if (error) alert(error.message)
+    else alert('Check your inbox for the login link!')
+  }
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' })
+    if (error) alert(error.message)
+  }
 
   return (
-    <main className="min-h-screen p-6 bg-gray-50">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">News Aggregator</h1>
-        <Link href="/auth" className="text-blue-600 hover:underline">
-          Login / Sign Up
-        </Link>
-      </header>
-
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.length === 0 ? (
-          <p className="text-gray-600">No articles to display yet.</p>
-        ) : (
-          articles.map((article) => (
-            <Link
-              key={article.id}
-              href={article.url}
-              target="_blank"
-              className="border rounded overflow-hidden shadow-sm hover:shadow-md transition"
-            >
-              {article.image_url && (
-                <img src={article.image_url} alt={article.title} className="w-full h-48 object-cover" />
-              )}
-              <div className="p-4">
-                <h2 className="text-lg font-semibold">{article.title}</h2>
-                {article.description && <p className="text-sm mt-2">{article.description}</p>}
-              </div>
-            </Link>
-          ))
-        )}
-      </section>
-    </main>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-2xl font-bold mb-4">Login / Sign Up</h1>
+      <input
+        type="email"
+        placeholder="Email address"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        className="border rounded px-3 py-2 mb-4 w-full max-w-sm"
+      />
+      <button onClick={signInWithEmail} className="mb-2 px-4 py-2 bg-blue-600 text-white rounded">
+        Sign in via Magic Link
+      </button>
+      <button onClick={signInWithGoogle} className="px-4 py-2 bg-red-600 text-white rounded">
+        Sign in with Google
+      </button>
+    </div>
   )
 }

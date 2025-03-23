@@ -9,7 +9,10 @@ type Article = {
 }
 
 export default async function HomePage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'}/api/articles`)
+  const base = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  console.log('Using base URL:', base)
+
+  const res = await fetch(new URL('/api/articles', base).toString())
   const { articles }: { articles: Article[] } = await res.json()
 
   return (
