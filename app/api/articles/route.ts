@@ -1,40 +1,35 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabaseClient'
 
-const NEWSAPI_KEY = process.env.NEWSAPI_KEY
+const NEWSAPI_KEY = process.env.NEWSAPI_KEY!
 
-async function fetchNews() {
-  const resp = await fetch(
-    `https://newsapi.org/v2/top-headlines?country=us&pageSize=50&apiKey=${NEWSAPI_KEY}`
-  )
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const query = searchParams.get('q') || ''
+
+  const url = new URL('https://newsapi.org/v2/top-headlines')
+  url.searchParams.set('apiKey', NEWSAPI_KEY)
+  url.searchParams.set('pageSize', '50')
+  url.searchParams.set('country', 'us')
+  if (query) url.searchParams.set('q', query)
+
+  const resp = await fetch(url.toString())
   const json = await resp.json()
-  return json.articles || []
-}
+  const articlesFromAPI = json.articles || []
 
-export async function GET() {
-  // 1️⃣ Fetch latest from NewsAPI
-  const articlesFromAPI = await fetchNews()
-
-  // 2️⃣ Upsert into Supabase
-  for (const { title, description, url, urlToImage, publishedAt } of articlesFromAPI) {
-    const { error } = await supabase
+  for (const { title, description, url: link, urlToImage, publishedAt } of articlesFromAPI) {
+    await supabase
       .from('articles')
-      .upsert(
-        { title, description, url, image_url: urlToImage, published_at: publishedAt },
-        { onConflict: 'url' }
-      )
-    if (error) console.error('Upsert error:', error.message)
+      .upsert({ title, description, url: link, image_url: urlToImage, published_at: publishedAt }, { onConflict: 'url' })
   }
 
-  // 3️⃣ Query Supabase for the most recent 50 articles
   const { data: articles, error } = await supabase
     .from('articles')
     .select('id, title, description, image_url, url, published_at')
+    .ilike('title', `%${query}%`)
     .order('published_at', { ascending: false })
     .limit(50)
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ articles })
 }
