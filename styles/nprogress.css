@@ -1,0 +1,14 @@
+/* e.g., in /styles/nprogress.css */
+#nprogress {
+    pointer-events: none;
+  }
+  
+  #nprogress .bar {
+    background: #f00; /* YouTube-like red bar */
+    height: 3px;
+  }
+  
+  /* Optional spinner styling; you can hide it if you want only a bar */
+  #nprogress .spinner {
+    display: none;
+  }

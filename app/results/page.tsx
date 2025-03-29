@@ -8,10 +8,11 @@ type Article = {
   url: string
 }
 
-export default async function HomePage({ searchParams }: { searchParams: { q?: string } }) {
-  const params = await searchParams
-  const qParam = params.q ?? ''
-  const queryString = qParam ? `?q=${encodeURIComponent(qParam)}` : ''
+export default async function ResultsPage({ searchParams }: { searchParams: { search_query?: string } }) {
+  // Read the search_query parameter from the URL
+  const query = searchParams.search_query ?? ''
+  // We'll pass it to our API as the "q" parameter
+  const queryString = query ? `?q=${encodeURIComponent(query)}` : ''
 
   const base = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
   const res = await fetch(`${base}/api/articles${queryString}`)
@@ -20,11 +21,10 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
   return (
     <section className="min-h-screen grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-5 gap-y-8 bg-gray-50">
       {articles.length === 0 ? (
-        <p className="text-gray-600">No articles found.</p>
+        <p className="text-gray-600">No articles found for "{query}".</p>
       ) : (
         articles.map(article => {
           let publisher = "";
-          // Trim the trailing " - Publisher" from the title, if it exists.
           let trimmedTitle = article.title;
           const dashIndex = trimmedTitle.lastIndexOf(' - ');
           if (dashIndex !== -1) {
@@ -47,7 +47,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
                 />
               )}
               <div className="p-4">
-                <h2 className="text-lg/5.5 font-semibold line-clamp-3" title={trimmedTitle}>
+                <h2 className="text-lg font-semibold line-clamp-3" title={trimmedTitle}>
                   {trimmedTitle}
                 </h2>
                 <p className="text-s text-gray-700 mt-1">{publisher}</p>

@@ -2,7 +2,9 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import Link from "next/link"
 import UserMenu from "@/components/UserMenu"
+import SearchBar from '@/components/SearchBar'
 import "./globals.css"
+
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
@@ -18,18 +20,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen`}>
         <header className="flex items-center justify-between px-6 py-4 border-b">
           <Link href="/" className="text-2xl font-bold">News Aggregator</Link>
-          <form action="/" method="get" className="flex w-1/3">
-            <input
-              name="q"
-              type="text"
-              placeholder="Search articles..."
-              className="flex-grow border rounded-l px-3 py-2"
-            />
-            <button type="submit" className="bg-black text-white px-4 rounded-r">Search</button>
-          </form>
+          <SearchBar />
           <UserMenu />
         </header>
-        <main className="p-6">{children}</main>
+        <main className="p-6 flex">
+          {/* Left Sidebar */}
+          <aside className="w-40 pr-5">
+            <div className="sticky top-6">
+              <Link 
+                href="/" 
+                className="text-lg/5.5 font-medium block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                Recent
+              </Link>
+            </div>
+          </aside>
+          {/* Main Content */}
+          <div className="flex-grow">
+            {children}
+          </div>
+        </main>
       </body>
     </html>
   )
