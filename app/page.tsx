@@ -35,16 +35,17 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
           return (
             <Link
               key={article.id}
-              href={article.url}
-              target="_blank"
+              href={`/article/${article.id}`}
               className="w-80 h-80 rounded-lg overflow-hidden transform hover:scale-105 hover:bg-gray-200 hover:shadow-2xl transition duration-100 flex flex-col"
             >
               {article.image_url && (
-                <img
-                  src={article.image_url}
-                  alt={article.title}
-                  className="w-full h-50 rounded-lg object-cover"
-                />
+                <div className="w-full h-48 overflow-hidden">
+                  <img
+                    src={article.image_url}
+                    alt={article.title}
+                    className="w-full h-full rounded-lg object-cover"
+                  />
+                </div>
               )}
               <div className="p-4">
                 <h2 className="text-lg/5.5 font-semibold line-clamp-3" title={trimmedTitle}>

@@ -11,16 +11,21 @@ export async function GET(request: Request) {
   url.searchParams.set('apiKey', NEWSAPI_KEY)
   url.searchParams.set('pageSize', '50')
   url.searchParams.set('country', 'us')
-  if (query) url.searchParams.set('q', query)
+  if (query) {
+    url.searchParams.set('q', query)
+  }
 
   const resp = await fetch(url.toString())
   const json = await resp.json()
   const articlesFromAPI = json.articles || []
 
   for (const { title, description, url: link, urlToImage, publishedAt } of articlesFromAPI) {
-    await supabase
+    const { error } = await supabase
       .from('articles')
       .upsert({ title, description, url: link, image_url: urlToImage, published_at: publishedAt }, { onConflict: 'url' })
+    if (error) {
+      console.error(`Upsert error for "${title}":`, error.message)
+    }
   }
 
   const { data: articles, error } = await supabase
@@ -30,6 +35,8 @@ export async function GET(request: Request) {
     .order('published_at', { ascending: false })
     .limit(50)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
   return NextResponse.json({ articles })
 }
