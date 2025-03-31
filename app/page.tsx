@@ -47,10 +47,10 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
                 </div>
               )}
               <div className="p-4">
-                <h2 className="text-lg font-semibold line-clamp-3" title={trimmedTitle}>
+                <h2 className="text-lg/5.5 font-semibold line-clamp-3" title={trimmedTitle}>
                   {trimmedTitle}
                 </h2>
-                <p className="text-xs text-gray-700 mt-1">{publisher}</p>
+                <p className="text-s text-gray-700 mt-1">{publisher}</p>
               </div>
             </Link>
           )
