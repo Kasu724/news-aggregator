@@ -35,7 +35,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
             <Link
               key={article.id}
               href={`/article/${article.id}`}
-              className="rounded-lg overflow-hidden transform hover:scale-105 hover:bg-gray-200 hover:shadow-2xl transition duration-100 flex flex-col"
+              className="rounded-lg overflow-hidden transform hover:scale-105 hover:bg-gray-300 hover:shadow-2xl transition duration-100 flex flex-col"
             >
               {article.image_url && (
                 <div className="w-full rounded-lg aspect-[16/9] overflow-hidden">

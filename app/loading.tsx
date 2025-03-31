@@ -15,14 +15,15 @@ export default function Loading() {
             }}
           >
             {/* Thumbnail (gray box) */}
-            <div className="w-full h-50 bg-gray-300" />
+            <div className="w-full h-50 bg-gray-400" />
     
             {/* Text area */}
             <div className="p-4 flex-grow flex flex-col justify-center">
               {/* Headline skeleton line */}
-              <div className="h-4 bg-gray-300 rounded w-3/4 mb-3" />
+              <div className="h-4 bg-gray-300 rounded-lg w-full mb-3" />
+              <div className="h-4 bg-gray-300 rounded-lg w-full mb-3" />
               {/* Publisher skeleton line */}
-              <div className="h-4 bg-gray-300 rounded w-1/2" />
+              <div className="h-4 bg-gray-300 rounded-lg w-1/2" />
             </div>
           </div>
         ))}

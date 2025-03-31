@@ -19,10 +19,10 @@ export async function GET(request: Request) {
   const json = await resp.json()
   const articlesFromAPI = json.articles || []
 
-  for (const { title, description, url: link, urlToImage, publishedAt } of articlesFromAPI) {
+  for (const { title, description, url: link, urlToImage, publishedAt, category } of articlesFromAPI) {
     const { error } = await supabase
       .from('articles')
-      .upsert({ title, description, url: link, image_url: urlToImage, published_at: publishedAt }, { onConflict: 'url' })
+      .upsert({ title, description, url: link, image_url: urlToImage, published_at: publishedAt, category }, { onConflict: 'url' })
     if (error) {
       console.error(`Upsert error for "${title}":`, error.message)
     }

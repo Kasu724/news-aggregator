@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import Link from "next/link"
+
 import UserMenu from "@/components/UserMenu"
 import SearchBar from '@/components/SearchBar'
+import LoadingBar from '@/components/LoadingBar'
 import "./globals.css"
 
 
@@ -18,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen`}>
+        <LoadingBar />
         <header className="flex items-center justify-between px-6 py-4 border-b">
           <Link href="/" className="text-2xl font-bold">News Aggregator</Link>
           <SearchBar />

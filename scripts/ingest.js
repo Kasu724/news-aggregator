@@ -16,7 +16,7 @@ async function ingest() {
   if (!json.articles) throw new Error('No articles returned from NewsAPI')
 
   for (const item of json.articles) {
-    const { title, description, url, urlToImage, publishedAt } = item
+    const { title, description, url, urlToImage, publishedAt, category } = item
     await supabase
       .from('articles')
       .upsert(
@@ -26,6 +26,7 @@ async function ingest() {
           url,
           image_url: urlToImage,
           published_at: publishedAt,
+          category
         },
         { onConflict: 'url' }
       )
