@@ -1,12 +1,10 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import Link from "next/link"
-
 import UserMenu from "@/components/UserMenu"
 import SearchBar from '@/components/SearchBar'
 import LoadingBar from '@/components/LoadingBar'
 import "./globals.css"
-
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
@@ -28,11 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="p-6 flex">
           {/* Left Sidebar */}
-          <aside className="w-40 pr-5">
+          <aside className="w-[200px] pr-5">
             <div className="sticky top-6">
               <Link 
                 href="/" 
-                className="text-lg/5.5 font-medium block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                className="text-lg font-medium block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
               >
                 Recent
               </Link>

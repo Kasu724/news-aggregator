@@ -6,6 +6,7 @@ type Article = {
   description: string | null
   image_url: string | null
   url: string
+  category: string
 }
 
 export default async function HomePage({ searchParams }: { searchParams: { q?: string } }) {
@@ -18,7 +19,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
   const { articles }: { articles: Article[] } = await res.json()
 
   return (
-    <section className="min-h-screen grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-5 gap-y-8 bg-gray-50 p-6">
+    <section className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-5 gap-y-8 bg-gray-50">
       {articles.length === 0 ? (
         <p className="text-gray-600">No articles found.</p>
       ) : (
@@ -38,7 +39,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
               className="rounded-lg overflow-hidden transform hover:scale-105 hover:bg-gray-300 hover:shadow-2xl transition duration-100 flex flex-col"
             >
               {article.image_url && (
-                <div className="w-full rounded-lg aspect-[16/9] overflow-hidden">
+                <div className="w-full overflow-hidden rounded-lg aspect-[16/9]">
                   <img
                     src={article.image_url}
                     alt={article.title}
@@ -46,11 +47,12 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
                   />
                 </div>
               )}
-              <div className="p-4">
+              <div className="p-4 flex-grow flex flex-col">
                 <h2 className="text-lg/5.5 font-semibold line-clamp-3" title={trimmedTitle}>
                   {trimmedTitle}
                 </h2>
                 <p className="text-s text-gray-700 mt-1">{publisher}</p>
+                <p className="text-s text-gray-700 mt-1"><strong>Category:</strong> {article.category}</p>
               </div>
             </Link>
           )
