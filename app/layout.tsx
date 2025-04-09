@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="p-6 flex">
           {/* Left Sidebar */}
-          <aside className="w-[200px] pr-5">
+          <aside className="w-[200px] pr-5 shrink-0">
             <div className="sticky top-6">
               <Link 
                 href="/" 
