@@ -19,7 +19,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
   const { articles }: { articles: Article[] } = await res.json()
 
   return (
-    <section className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-5 gap-y-8 bg-gray-50">
+    <section className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-x-5 gap-y-8 bg-gray-50">
       {articles.length === 0 ? (
         <p className="text-gray-600">No articles found.</p>
       ) : (
