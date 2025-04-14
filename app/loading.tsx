@@ -3,7 +3,7 @@ export default function Loading() {
   const skeletonCards = Array.from({ length: 15 });
 
   return (
-    <section className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-5 gap-y-8 bg-gray-50">
+    <section className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-x-5 gap-y-8 bg-gray-50">
       {skeletonCards.map((_, index) => (
         <div
           key={index}

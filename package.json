@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "concurrently \"cd classifier-service && venv\\Scripts\\python.exe -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload\" \"next dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.49.1",
     "dotenv": "^16.4.7",
     "next": "15.2.3",
+    "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
     "react": "^19.0.0",
@@ -27,6 +28,7 @@
     "@types/nprogress": "^0.2.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
