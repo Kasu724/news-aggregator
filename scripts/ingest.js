@@ -36,7 +36,7 @@ async function getCategoryForText(text) {
 
 /**
  * ingest - Fetches articles from NewsAPI, categorizes them using the classifier service,
- * and upserts them into the Supabase database.
+ * and inserts new articles into the Supabase database while ignoring duplicates.
  */
 async function ingest() {
   try {
@@ -49,13 +49,16 @@ async function ingest() {
 
     for (const item of json.articles) {
       const { title, description, url, urlToImage, publishedAt } = item;
-      // Combine title and description for better context for classification
+      // Combine title and description for classification context
       const fullText = title + (description ? ' ' + description : '');
       const category = await getCategoryForText(fullText);
 
+      // Insert the article into Supabase
+      // Using ignoreDuplicates: true ensures that if an article with the same URL already exists,
+      // it will be skipped.
       const { error } = await supabase
         .from('articles')
-        .upsert(
+        .insert(
           {
             title,
             description,
@@ -64,12 +67,12 @@ async function ingest() {
             published_at: publishedAt,
             category,
           },
-          { onConflict: 'url' }
+          { ignoreDuplicates: true }
         );
       if (error) {
-        console.error(`Upsert error for "${title}":`, error.message);
+        console.error(`Insert error for "${title}":`, error.message);
       } else {
-        console.log(`Upserted "${title}" as category: ${category}`);
+        console.log(`Inserted "${title}" as category: ${category}`);
       }
     }
 

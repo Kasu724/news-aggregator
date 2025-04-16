@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from transformers import pipeline
 from dotenv import load_dotenv
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "" 
 
 # Load environment variables (for local testing; in Lambda, use Lambda's environment settings)
 load_dotenv('./.env.local')
