@@ -1,3 +1,5 @@
+// Run with "npm run dev"
+
 import Link from 'next/link'
 
 type Article = {
@@ -47,7 +49,7 @@ export default async function HomePage({ searchParams }: { searchParams: { q?: s
                   />
                 </div>
               )}
-              <div className="p-4 flex-grow flex flex-col">
+              <div className="p-4">
                 <h2 className="text-lg/5.5 font-semibold line-clamp-3" title={trimmedTitle}>
                   {trimmedTitle}
                 </h2>

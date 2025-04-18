@@ -19,12 +19,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black min-h-screen`}>
         <LoadingBar />
-        <header className="flex items-center justify-between px-6 py-4 border-b">
-          <Link href="/" className="text-2xl font-bold">News Aggregator</Link>
+        <header className="flex items-center justify-between px-6 py-4">
+          <Link href="/" className="text-2xl font-bold">
+            <img
+            src="/icons/mainIcon.png"
+            alt="myNews Icon"
+            className="h-12 w-auto mr-2 inline-block"
+            />
+            <img
+            src="/icons/logo.png"
+            alt="myNews logo"
+            className="h-10 w-auto mr-2 inline-block mt-1"
+            />
+          </Link>
           <SearchBar />
           <UserMenu />
         </header>
-        <main className="p-6 flex">
+        <main className="px-6 py-1 flex">
           {/* Left Sidebar */}
           <aside className="w-40 pr-5 shrink-0">
             <div className="sticky top-6">
@@ -32,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 href="/" 
                 className="text-lg font-medium block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
               >
-                Recent
+                Popular
               </Link>
             </div>
           </aside>

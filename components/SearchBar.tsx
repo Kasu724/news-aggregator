@@ -13,16 +13,25 @@ export default function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-1/3">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-1/3 mx-auto"
+    >
       <input
         type="text"
         placeholder="Search articles..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="flex-grow border rounded-l px-3 py-2"
+        className="flex-grow border rounded-l-3xl px-3 py-2"
       />
-      <button type="submit" className="bg-black text-white px-4 rounded-r">
-        Search
+      <button 
+        type="submit"
+        className="bg-gray-400 text-white px-4 rounded-r-3xl">
+          <img
+            src="/icons/search.png"
+            alt="Search Icon"
+            className="h-6 w-auto mr-2 inline-block"
+          />
       </button>
     </form>
   )

@@ -1,16 +1,15 @@
+# Run with "cd classifier-service; . .\venv\Scripts\Activate.ps1; python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import pipeline
 from dotenv import load_dotenv
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "" 
 
-# Load environment variables (for local testing; in Lambda, use Lambda's environment settings)
 load_dotenv('./.env.local')
-
 app = FastAPI(title="Classifier Service")
 
-# Load the classifier model. Adjust device if you have a GPU.
+# Load  classifier model
 classifier = pipeline(
     "text-classification",
     model="classla/multilingual-IPTC-news-topic-classifier",
@@ -36,7 +35,3 @@ async def classify_text(input: TextInput):
 @app.get("/")
 async def root():
     return {"message": "Classifier service is running!"}
-
-# Use Mangum to adapt our FastAPI app for AWS Lambda
-from mangum import Mangum
-handler = Mangum(app)
