@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# myNews – Personalized News Aggregator
 
-## Getting Started
+**MyNews** is a Next.js + Supabase web application that fetches top headlines from [NewsAPI.org](https://newsapi.org), categorizes them via a custom NLP classifier, stores them in Supabase, and displays them in a responsive, YouTube‑style grid.  Users can search, browse by category, and click through to read full articles.  There is also a standard email/password + Google OAuth login flow powered by Supabase Auth.
 
-First, run the development server:
+---
+
+## Tech Stack
+
+- **Frontend & API**
+  - [Next.js 15](https://nextjs.org) (app router, server components, client components)
+  - [Tailwind CSS](https://tailwindcss.com) for utility‑first styling
+  - NProgress for custom loading bar
+  - React hooks & client components for search, user menu, etc.
+
+- **Backend & Data**
+  - [Supabase](https://supabase.com) (PostgreSQL) for articles storage, user management, and row‑level security
+  - News fetch & upsert via Next.js API route `app/api/articles`
+  - Custom ingest script `app/scripts/ingest.js` for NewsAPI ingestion
+
+- **NLP Category Classification**
+  - Python FastAPI service
+  - Uses Hugging Face’s `classla/multilingual-IPTC-news-topic-classifier`
+  - Exposes a `/classify` endpoint that labels “sports”, “politics”, “economy”, etc.
+
+- **Authentication**
+  - Supabase Auth (email/password + Google OAuth)
+  - Client‑side login/signup pages in `app/auth/page.tsx`
+
+---
+
+## Features
+
+- **Article Grid**
+  - Responsive, dynamic grid
+  - Thumbnail aspect‑ratio lock, skeleton loaders, smooth hover animations
+  - Title trimmed to 3 lines + “…” + hover‑tooltip with full title
+  - Publisher domain, category badge under each card
+
+- **Search**
+  - Header search bar (like YouTube) that shows articles similar to searched topic
+
+- **Single‑Article View**
+  - “Detail” page under `app/article/[id]/page.tsx`
+  - Shows headline, publisher, full‑width image, description, and a “Read full article” button
+  - Client‑side back button to grid instantly (route‑only change)
+
+- **Authentication**
+  - Global header shows “Login/Sign Up” or user avatar + dropdown when signed in
+  - Protected client and API routes possible via Supabase RLS
+
+- **Background Ingestion**
+  - Python classifier service to run HuggingFace model
+  - Can be run manually (`cd classifier-service; . .\venv\Scripts\Activate.ps1; python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload`)
+  - `ingest.js` script pulls NewsAPI headlines, classifies them, and upserts into Supabase
+  - Can be run manually (`node scripts/ingest.js`)
+---
+
+##  Quickstart (Local)
+
+### 1. Clone & install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your‑username/mynews.git
+cd mynews
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Supabase Setup
+  1. Create a Supabase project
+  2. In the SQL editor, create an `articles` table
+  ```SQL
+  create table public.articles (
+    id serial primary key,
+    title text not null,
+    description text,
+    url text unique not null,
+    image_url text,
+    published_at timestamptz,
+    category text
+  );
+  ```
+  3. Enable Row‑Level Security (RLS) on articles and add a permissive “INSERT” policy:
+  ```SQL
+  alter table public.articles enable row level security;
+  create policy "public insert" on public.articles
+    for insert using (true) with check (true);
+  ```
+### 3. Environment Setup
+Create a .env.local in your project root:
+```env
+# NewsAPI
+NEWSAPI_KEY=your_newsapi_org_key
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xyzcompany.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=anon-xxxxxxxxxxxxxx
+SUPABASE_SERVICE_ROLE_KEY=service-role-xxxxxxxxxxxxxx
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Hugging Face (if using HF API)
+HUGGINGFACE_API_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxx
 
-## Learn More
+# Base URL for fetch calls
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+### 4. Start Classification Service
+```bash
+# in app/classifier-service/
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
 
-To learn more about Next.js, take a look at the following resources:
+pip install fastapi uvicorn transformers
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 5. Run Ingestion
+```bash
+node scripts/ingest.js
+```
+This will:
+1. Fetch top‑50 headlines
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Call your local classifier service for each
 
-## Deploy on Vercel
+3. Upsert into Supabase with category
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 6. Run development server
+```bash
+npm run dev
+```
+Open http://localhost:3000
