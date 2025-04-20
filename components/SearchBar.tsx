@@ -26,7 +26,7 @@ export default function SearchBar() {
       />
       <button 
         type="submit"
-        className="bg-gray-400 text-white px-4 rounded-r-3xl">
+        className="bg-gray-400 border px-4 rounded-r-3xl cursor-pointer">
           <img
             src="/icons/search.png"
             alt="Search Icon"

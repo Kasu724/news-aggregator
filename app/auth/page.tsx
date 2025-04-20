@@ -26,51 +26,53 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
-      <h1 className="text-3xl font-bold mb-6">{mode === 'login' ? 'Login' : 'Create Account'}</h1>
+    <div className="flex flex-col items-start justify-start bg-white px-10 py-7">
 
-      <div className="flex space-x-4 mb-8">
+
+      <h1 className="flex space-x-10 mb-10">
         <button
-          className={`px-4 py-2 ${mode === 'login' ? 'font-bold border-b-2 border-black' : 'text-gray-500'}`}
+          className={`px-4 py-2 cursor-pointer text-5xl ${mode === 'login' ? 'font-bold border-b-2 border-black' : 'text-gray-500'}`}
           onClick={() => setMode('login')}
         >
           Login
         </button>
         <button
-          className={`px-4 py-2 ${mode === 'signup' ? 'font-bold border-b-2 border-black' : 'text-gray-500'}`}
+          className={`px-4 py-2 cursor-pointer text-5xl ${mode === 'signup' ? 'font-bold border-b-2 border-black' : 'text-gray-500'}`}
           onClick={() => setMode('signup')}
         >
           Create Account
         </button>
-      </div>
+      </h1>
 
       <input
         type="email"
         placeholder="Email address"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        className="border rounded px-4 py-2 mb-4 w-full max-w-sm"
+        className="border rounded px-4 py-4 mb-8 w-full max-w-xl text-xl"
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={e => setPassword(e.target.value)}
-        className="border rounded px-4 py-2 mb-6 w-full max-w-sm"
+        className="border rounded px-4 py-4 mb-10 w-full max-w-xl text-xl"
       />
 
       <button
         onClick={handleEmailAuth}
-        className="w-full max-w-sm px-4 py-2 bg-black text-white rounded mb-4"
+        className="w-full max-w-xl px-4 py-4 bg-black text-white rounded mb-4 text-xl"
       >
         {mode === 'login' ? 'Login' : 'Create Account'}
       </button>
 
-      <div className="text-sm text-gray-500 mb-4">or</div>
+      <div className="w-full max-w-xl text-center text-xl text-gray-500 mb-4">
+        or
+      </div>
 
       <button
         onClick={handleGoogleAuth}
-        className="w-full max-w-sm px-4 py-2 border rounded flex justify-center items-center"
+        className="w-full max-w-xl px-4 py-4 border rounded flex justify-center items-center text-xl"
       >
         Continue with Google
       </button>
